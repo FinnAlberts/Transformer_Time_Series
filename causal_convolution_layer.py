@@ -31,10 +31,10 @@ class CausalConv1d(torch.nn.Conv1d):
         self.__padding = (kernel_size - 1) * dilation
         
     def forward(self, input):
-        return super(CausalConv1d, self).forward(F.pad(input, (self.__padding, 0)))
+        return super(CausalConv1d, self).forward(F.pad(input, (self.__padding, 0))) # Voeg alleen padding links toe, zodat kernel nooit in de toekomst kan kijken
 
 
-class context_embedding(torch.nn.Module):
+class context_embedding(torch.nn.Module): # Model wat gebruik maakt van de causal convolution layer van hierboven. Doet verder niks.
     def __init__(self,in_channels=1,embedding_size=256,k=5):
         super(context_embedding,self).__init__()
         self.causal_convolution = CausalConv1d(in_channels,embedding_size,kernel_size=k)
