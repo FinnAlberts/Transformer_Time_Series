@@ -22,7 +22,7 @@ class time_series_decoder_paper(Dataset):
         self.transform = None
         
         # time points
-        self.x = torch.cat(N*[torch.arange(0,t0+24).type(torch.float).unsqueeze(0)])
+        self.x = torch.cat(N*[torch.arange(0,t0+100).type(torch.float).unsqueeze(0)])
 
         # sinuisoidal signal
         A1 = torch.full((N,), 5)
@@ -33,7 +33,7 @@ class time_series_decoder_paper(Dataset):
         self.fx = torch.cat([A1.unsqueeze(1)*torch.sin(np.pi*self.x[0,0:12]/6)+72 ,
                         A2.unsqueeze(1)*torch.sin(np.pi*self.x[0,12:24]/6)+72 ,
                         A3.unsqueeze(1)*torch.sin(np.pi*self.x[0,24:t0]/6)+72,
-                        A4.unsqueeze(1)*torch.sin(np.pi*self.x[0,t0:t0+24]/12)+72],1)
+                        A4.unsqueeze(1)*torch.sin(np.pi*self.x[0,t0:t0+100]/12)+72],1)
         
         # add noise
         self.fx = self.fx + torch.randn(self.fx.shape)
@@ -63,10 +63,10 @@ class time_series_decoder_paper(Dataset):
         return sample
     
     def _generate_square_subsequent_mask(self,t0):
-        mask = torch.zeros(t0+24,t0+24)
+        mask = torch.zeros(t0+100,t0+100)
         for i in range(0,t0):
             mask[i,t0:] = 1 
-        for i in range(t0,t0+24):
+        for i in range(t0,t0+100):
             mask[i,i+1:] = 1
         mask = mask.float().masked_fill(mask == 1, float('-inf'))#.masked_fill(mask == 1, float(0.0))
         return mask
