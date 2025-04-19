@@ -25,9 +25,10 @@ class time_series_decoder_paper(Dataset):
         self.x = torch.cat(N*[torch.arange(0,t0+24).type(torch.float).unsqueeze(0)])
 
         # sinuisoidal signal
-        A1= 40 * torch.rand(N)
-        A2= 60 * torch.rand(N)
-        A3= 3 * torch.rand(N)
+        A1 = torch.full((N,), 5)
+        A2 = torch.full((N,), 100)
+        A3 = torch.full((N,), 3)
+
         A4 = torch.max(A1,A2)        
         self.fx = torch.cat([A1.unsqueeze(1)*torch.sin(np.pi*self.x[0,0:12]/6)+72 ,
                         A2.unsqueeze(1)*torch.sin(np.pi*self.x[0,12:24]/6)+72 ,
